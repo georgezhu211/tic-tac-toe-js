@@ -22,7 +22,20 @@ restart to clear grid and repeat
 */
 
 const TicTacToe =  (function() {
-  let gameBoard = ['0','1','2','3','4','5','6','7','8'];
+  let gameBoard = ['x','o','o','x','x','x','o','o','x'];
 
-  
+  // cache DOM
+  const squares = document.querySelectorAll('.square')
+
+  function render() {
+    for(let i = 0; i < gameBoard.length; i++) {
+      squares[i].textContent = gameBoard[i]
+    }
+  }
+
+  return {
+    display
+  }
 })();
+
+TicTacToe.display();
