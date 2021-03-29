@@ -27,21 +27,21 @@ const TicTacToe =  (function() {
 
   // cache DOM
   const squares = document.querySelectorAll('.square');
-
+  const restartBtn = document.getElementById('restart-button');
+  const message = document.querySelector('#message');
+  
   // bind events
   squares.forEach((square) => {
-    square.addEventListener('click', addMark)
-  })
+    square.addEventListener('click', addMark);
+  });
 
-  function playGame() {
-
-  }
+  restartBtn.addEventListener('click', restart);
 
   function render() {
     for(let i = 0; i < gameBoard.length; i++) {
       squares[i].textContent = gameBoard[i];
     }
-    console.log(gameBoard)
+    console.log(gameBoard);
   }
 
   function addMark() {
@@ -68,7 +68,7 @@ const TicTacToe =  (function() {
     winCombinations.forEach((combination) => {
       const result = combination.map( x => gameBoard[x] )
       if(result.every(x => x === currentMark)) {
-        gameOver()
+        gameOver();
       }
     })
   }
@@ -83,15 +83,15 @@ const TicTacToe =  (function() {
 
   function gameOver() {
     squares.forEach((square) => {
-      square.removeEventListener('click', addMark)
+      square.removeEventListener('click', addMark);
     })
-    const message = document.querySelector('#message');
     message.textContent = `Congrats, ${currentMark} is the winner!`
   }
 
-  return {
-    playGame
+  function restart() {
+    gameBoard = ['','','','','','','','',''];
+    message.textContent = 'Good Luck!';
+    playGame();
   }
-})();
 
-TicTacToe.playGame();
+})();
