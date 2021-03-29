@@ -50,6 +50,7 @@ const TicTacToe =  (function() {
     gameBoard[index] = currentMark;
     render();
     checkWinner();
+    checkDraw();
     switchMark();
   }
 
@@ -69,8 +70,16 @@ const TicTacToe =  (function() {
       const result = combination.map( x => gameBoard[x] )
       if(result.every(x => x === currentMark)) {
         gameOver();
+        message.textContent = `Congrats, ${currentMark} is the winner!`
       }
     })
+  }
+
+  function checkDraw() {
+    if(gameBoard.every(x => x !== '')) {
+      gameOver();
+      message.textContent = `It was a draw!`
+    }
   }
 
   function switchMark() {
@@ -85,13 +94,16 @@ const TicTacToe =  (function() {
     squares.forEach((square) => {
       square.removeEventListener('click', addMark);
     })
-    message.textContent = `Congrats, ${currentMark} is the winner!`
+    
   }
 
   function restart() {
     gameBoard = ['','','','','','','','',''];
     message.textContent = 'Good Luck!';
-    playGame();
+    render();
+    squares.forEach((square) => {
+      square.addEventListener('click', addMark);
+    });
   }
 
 })();

@@ -30,6 +30,10 @@ body {
   font-size: 80px;
 }
 
+.square:hover {
+  cursor: pointer;
+}
+
 #message {
   text-align: center;
   padding: 40px 0;
@@ -50,6 +54,12 @@ body {
   font-stretch: expanded;
 }
 
+#restart-button:hover {
+  box-shadow: 0 2px 3px #7868e6;
+  cursor: pointer;
+}
+ 
 #restart-button:active {
   transform: scale(1.05);
+  box-shadow: 0 2px 3px #7868e6;
 }
