@@ -22,20 +22,76 @@ restart to clear grid and repeat
 */
 
 const TicTacToe =  (function() {
-  let gameBoard = ['x','o','o','x','x','x','o','o','x'];
+  let gameBoard = ['','','','','','','','',''];
+  let currentMark = 'x';
 
   // cache DOM
-  const squares = document.querySelectorAll('.square')
+  const squares = document.querySelectorAll('.square');
+
+  // bind events
+  squares.forEach((square) => {
+    square.addEventListener('click', addMark)
+  })
+
+  function playGame() {
+
+  }
 
   function render() {
     for(let i = 0; i < gameBoard.length; i++) {
-      squares[i].textContent = gameBoard[i]
+      squares[i].textContent = gameBoard[i];
+    }
+    console.log(gameBoard)
+  }
+
+  function addMark() {
+    const index = +(this.dataset.index);
+    if(gameBoard[index] !== '') return
+    gameBoard[index] = currentMark;
+    render();
+    checkWinner();
+    switchMark();
+  }
+
+  function checkWinner() {
+    const winCombinations = [
+      [0,1,2],
+      [3,4,5],
+      [6,7,8],
+      [0,3,6],
+      [1,4,7],
+      [2,5,8],
+      [0,4,8],
+      [2,4,6]
+    ]
+
+    winCombinations.forEach((combination) => {
+      const result = combination.map( x => gameBoard[x] )
+      if(result.every(x => x === currentMark)) {
+        gameOver()
+      }
+    })
+  }
+
+  function switchMark() {
+    if(currentMark == 'x') {
+      currentMark = 'o';
+    } else {
+      currentMark = 'x';
     }
   }
 
+  function gameOver() {
+    squares.forEach((square) => {
+      square.removeEventListener('click', addMark)
+    })
+    const message = document.querySelector('#message');
+    message.textContent = `Congrats, ${currentMark} is the winner!`
+  }
+
   return {
-    display
+    playGame
   }
 })();
 
-TicTacToe.display();
+TicTacToe.playGame();
