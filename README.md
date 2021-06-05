@@ -1,8 +1,17 @@
-# LIBRARY
+# Tic-Tac-Toe
 
-## Purpose
-To practice using factory functions and module pattern by making a game of Tic Tac Toe in Javascript.
+## Description
 
+A game of tic-tac-toe built with JavaScript, playable from the browser.
 
-## Acknowledgement
-[The Odin Project](https://theodinproject.com)
+## Preview
+
+![preview](preview.png)
+
+## Try it out
+
+https://georgezhu211.github.io/tic-tac-toe-js/
+
+## Acknowledgment
+
+[The Odin Project](https://www.theodinproject.com/)

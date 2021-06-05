@@ -1,109 +1,145 @@
-/*
-Rules for Tic-Tac-Toe:
-----------------------
-game is player by 2 players
-  X and O
-on a 3x3 grid
-  an array with 9 slots
-  a div container wrap 9 boxes
-  each box correlates to one of the slots in array
-starting with X, each player takes a turn
-  begin the game with X mark
-marking spaces on the 3x3 grid
-  when clicking on empty space, fill with mark
-  update array
-  check for winner
-    3 in a row, declare the winner
-  check for draw
-    no more space left
-  switch player
-game ends
-restart to clear grid and repeat
-*/
-
-const TicTacToe =  (function() {
-  let gameBoard = ['','','','','','','','',''];
-  let currentMark = 'x';
+const TicTacToe = (function () {
+  let gameBoard = ['', '', '', '', '', '', '', '', ''];
+  let currentMark = 'cross';
+  const winCombinations = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
 
   // cache DOM
+  const redLine = document.querySelector('.red-line');
   const squares = document.querySelectorAll('.square');
-  const restartBtn = document.getElementById('restart-button');
-  const message = document.querySelector('#message');
-  
+  const message = document.querySelector('.message');
+  const restartBtn = document.querySelector('.restart-btn');
+
   // bind events
   squares.forEach((square) => {
-    square.addEventListener('click', addMark);
+    square.addEventListener('click', playGame);
   });
 
-  restartBtn.addEventListener('click', restart);
+  restartBtn.addEventListener('click', restartGame);
 
-  function render() {
-    for(let i = 0; i < gameBoard.length; i++) {
-      squares[i].textContent = gameBoard[i];
-    }
+  // functions
+  function playGame() {
+    const index = +this.dataset.index;
+    if (invalidSquare(index)) return;
+    addMark(this, currentMark);
+    updateBoard(index, currentMark);
+    checkWinner();
+    boardFull();
+    switchMark();
     console.log(gameBoard);
   }
 
-  function addMark() {
-    const index = +(this.dataset.index);
-    if(gameBoard[index] !== '') return
-    gameBoard[index] = currentMark;
-    render();
-    checkWinner();
-    checkDraw();
-    switchMark();
-  }
-
-  function checkWinner() {
-    const winCombinations = [
-      [0,1,2],
-      [3,4,5],
-      [6,7,8],
-      [0,3,6],
-      [1,4,7],
-      [2,5,8],
-      [0,4,8],
-      [2,4,6]
-    ]
-
-    winCombinations.forEach((combination) => {
-      const result = combination.map( x => gameBoard[x] )
-      if(result.every(x => x === currentMark)) {
-        gameOver();
-        message.textContent = `Congrats, ${currentMark} is the winner!`
-      }
-    })
-  }
-
-  function checkDraw() {
-    if(gameBoard.every(x => x !== '')) {
-      gameOver();
-      message.textContent = `It was a draw!`
+  function invalidSquare(index) {
+    if (gameBoard[index] === '') {
+      return false;
     }
+    return true;
+  }
+  function addMark(square, mark) {
+    square.classList.add(mark);
+  }
+
+  function updateBoard(index, mark) {
+    gameBoard[index] = mark;
   }
 
   function switchMark() {
-    if(currentMark == 'x') {
-      currentMark = 'o';
+    if (currentMark == 'cross') {
+      currentMark = 'circle';
     } else {
-      currentMark = 'x';
+      currentMark = 'cross';
     }
+  }
+
+  function checkWinner() {
+    winCombinations.forEach((combination) => {
+      console.log(combination);
+      const result = combination.map((x) => gameBoard[x]);
+
+      if (result.every((x) => x === currentMark)) {
+        addRedLine(winCombinations.indexOf(combination));
+        message.textContent = `Congrats, ${currentMark} is the winner!`;
+        gameOver();
+      }
+    });
+  }
+
+  function boardFull() {
+    if (gameBoard.some((square) => square === '')) {
+      return;
+    }
+    message.textContent = `Game is a draw!`;
+
+    gameOver();
   }
 
   function gameOver() {
     squares.forEach((square) => {
-      square.removeEventListener('click', addMark);
-    })
-    
-  }
-
-  function restart() {
-    gameBoard = ['','','','','','','','',''];
-    message.textContent = 'Good Luck!';
-    render();
-    squares.forEach((square) => {
-      square.addEventListener('click', addMark);
+      square.removeEventListener('click', playGame);
     });
   }
 
+  function restartGame() {
+    gameBoard = ['', '', '', '', '', '', '', '', ''];
+    message.textContent = 'Good Luck!';
+    squares.forEach((square) => {
+      square.addEventListener('click', playGame);
+      square.className = 'square';
+      redLine.style.display = 'none';
+      currentMark = 'cross';
+    });
+  }
+
+  function addRedLine(index) {
+    switch (index) {
+      case 0:
+        redLine.setAttribute('style', 'top: 80px; left: 0;');
+        break;
+      case 1:
+        redLine.setAttribute('style', 'top: 250px; left: 0;');
+        break;
+      case 2:
+        redLine.setAttribute('style', 'bottom: 75px; left: 0;');
+        break;
+      case 3:
+        redLine.setAttribute(
+          'style',
+          'top: 250px; left: -170px; transform: rotate(90deg);'
+        );
+        break;
+      case 4:
+        redLine.setAttribute(
+          'style',
+          'top: 250px; left: 0; transform: rotate(90deg);'
+        );
+        break;
+      case 5:
+        redLine.setAttribute(
+          'style',
+          'top: 250px; left: 170px; transform: rotate(90deg);'
+        );
+        break;
+      case 6:
+        redLine.setAttribute(
+          'style',
+          'top: 250px; right: -45px; transform: rotate(45deg); width: 600px;'
+        );
+        break;
+      case 7:
+        redLine.setAttribute(
+          'style',
+          'top: 250px; right: -50px; transform: rotate(-45deg); width: 600px;'
+        );
+        break;
+    }
+    redLine.style.display = 'block';
+  }
 })();
